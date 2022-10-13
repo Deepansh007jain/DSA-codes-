@@ -5,9 +5,8 @@
 using namespace std;
 void fillarray(int a[],int n);
 void displayarray(int a[],int n);
-void quicksort(int a[],int L,int R);
-int partition(int a[],int L,int R);
-void swap(int &x,int &y);
+void mergesort(int a[],int L,int R);
+void merge(int a[],int L,int mid,int R);
 int main()
 {
 	int n;
@@ -20,7 +19,7 @@ int main()
 	displayarray(a,n);
 	
 	cout<<"\n*******\n";
-	quicksort(a,0,n-1);
+	mergesort(a,0,n-1);
 	
 	cout<<"\n*******\nafter sorting\n";
 	displayarray(a,n);
@@ -28,7 +27,7 @@ int main()
 	cout<<"\n******\n";
 	
 	return 0;
-	
+		
 }
 void fillarray(int a[],int n){
 	cout<<"enter element ";
@@ -40,32 +39,36 @@ void displayarray(int a[],int n){
 	for(int i=0;i<=n-1;i++)
 	cout<<"\t"<<a[i];
 }
-void quicksort(int a[],int L,int R)
+void merge(int a[],int L,int mid,int R)
+{
+	int n1=mid-L+1;
+	int n2=R-mid;
+	int Left[n1+1],Right[n2+1];
+	for(int i=0;i<n1;i++)
+	Left[i]=a[L+i];
+	for(int i=0;i<n2;i++)
+	Right[i]=a[mid+1+i];
+	Left[n1]=INT_MAX;
+	Right[n2]=INT_MAX;
+	int i=0,j=0;
+	for(int k=L;k<=R;k++)
+	{
+		if(Left[i]<Right[j])
+		a[k]=Left[i++];
+		else
+		a[k]=Right[j++];
+	}
+}
+void mergesort(int a[],int L,int R)
 {
 	if(L<R)
 	{
-		int pos=partition(a,L,R);
-		quicksort(a,L,pos-1);
-		quicksort(a,pos+1,R);
-		
+		int mid=(L+R)/2;
+		mergesort(a,L,mid);
+		mergesort(a,mid+1,R);
+		merge(a,L,mid,R);
 	}
 }
-int partition (int a[],int L,int R)
-{
-	int i=L-1;
-	int pivot=a[R];
-	for(int j=L;j<=R-1;j++)
-	{
-		if(a[j]<pivot)
-		swap(a[++i],a[j]);
-		
-	}
-	swap(a[++i],a[R]);
-	return i ;
-}
-void swap(int &x,int &y)
-{
-	int t=x;
-	x=y;
-	y=t;
-}
+
+
+	
